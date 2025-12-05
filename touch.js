@@ -356,7 +356,6 @@ function drawInfoBox() {
     "------------------------------------",
     "- Click a cube to open a memory",
     "- Arrow keys, W, A, and SPACE open them also",
-    "- M toggles background music",
     "- Click empty space to close popup", 
   ];
 
