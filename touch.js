@@ -62,14 +62,14 @@ function setup() {
   }
 
   //back button
-  let base = min(width, height);
-  let pad   = base * 0.05;   
-  let butW  = width * .9;    
-  let bx = width - butW - pad;
+  // let base = min(width, height);
+  // let pad   = base * 0.05;   
+  // let butW  = width * .9;    
+  // let bx = width - butW - pad;
 
-  let bttn = createButton("⬅ Back to Landing");
-  bttn.position(bx,pad);
-  bttn.mousePressed(redirect);
+  // let bttn = createButton("⬅ Back to Landing");
+  // bttn.position(bx,pad);
+  // bttn.mousePressed(redirect);
 }
 
 function windowResized() {
