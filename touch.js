@@ -60,6 +60,16 @@ function setup() {
       z: random(-4000, -500)
     });
   }
+
+  //back button
+  let base = min(width, height);
+  let pad   = base * 0.05;   
+  let butW  = width * .9;    
+  let bx = width - butW - pad;
+
+  let bttn = createButton("⬅ Back to Landing");
+  bttn.position(bx,pad);
+  bttn.mousePressed(redirect);
 }
 
 function windowResized() {
@@ -69,7 +79,7 @@ function windowResized() {
 }
 
 function draw() {
-  background(5, 8, 20);
+  background(0);
 
   /* --starfield-- */ 
   push();
@@ -198,30 +208,36 @@ function mousePressed() {
 
 function openPopupFor(idx) {
   if (idx < 0 || idx >= cubes.length) return;
-  let c = cubes[idx];
 
-  if (selectedSound && selectedSound.isPlaying()) {
-    selectedSound.stop();
-  }
+  stopAllObjectSounds();
+  
+  let c = cubes[idx];
 
   selectedImg = c.img;
   selectedSound = c.snd;
 
+  // if (selectedSound && selectedSound.isPlaying()) {
+  //   selectedSound.stop();
+  // }
+
+
   if (selectedSound) {
-    // selectedSound.loop(); // use loop if you want it to continue until closed
- 
-    selectedSound.onended(function () {
-      closePopupFromSound();
+    let thisSound = selectedSound;
+    let thisImg = selectedImg;
+
+    thisSound.stop();
+    thisSound.onended(function() {
+      if (selectedSound === thisSound && selectedImg === thisImg) {
+        closePopupFromSound();
+      }
     });
-    
-    selectedSound.play();
+
+    thisSound.play();
   }
 }
 
 function closePopup() {
-  if (selectedSound && selectedSound.isPlaying()) {
-    selectedSound.stop();
-  }
+  stopAllObjectSounds();
   selectedSound = null;
   selectedImg = null;
 }
@@ -242,7 +258,7 @@ function drawImagePopup(img) {
 
   // let winW = width * 0.3;
   // let winH = height * 0.25;
-    let winW = width * 0.7;
+  let winW = width * 0.7;
   let winH = height * 0.6;
   let x = width * 0.03;
   let y = height * 0.03;
@@ -251,12 +267,12 @@ function drawImagePopup(img) {
   fill(0,200);
   rect(x, y, winW, winH, 10);
 
-  fill(255,230);
-  rect(x,y,winW, 26, 10,10,0,0);
-  fill(0);
-  textSize(12);
-  textStyle(BOLD);
-  text('memory (click empty space to close)', x + 8, y + 17);
+  // fill(255,230);
+  // rect(x,y,winW, 26, 10,10,0,0);
+  // fill(0);
+  // textSize(12);
+  // textStyle(BOLD);
+  // text('memory (click empty space to close)', x + 8, y + 17);
 
   let cx = x + pad;
   let cy = y + 26 + pad;
@@ -356,6 +372,7 @@ function drawInfoBox() {
     "------------------------------------",
     "- Click a cube to open a memory",
     "- Arrow keys, W, A, and SPACE open them also",
+    "- M toggles background music",
     "- Click empty space to close popup", 
   ];
 
@@ -366,16 +383,19 @@ function drawInfoBox() {
   // Responsive sizes based on window
   let base = min(width, height);
   let pad   = base * 0.02;       
-  let winW  = width  * 0.3;                   
+  let winW  = width  * 0.3;
+                
   //let winH  = height * 0.27;   
   let lineCount = infoLines.length;
   let lineH = base * 0.025;
 
   let winH =  pad + (lineCount * lineH) + pad;                
-
+  
   // top-right
   let x = width  - winW  - pad;
   let y = pad;
+
+  //console.log("winW: ",winW," x: ",mouseX," y: ",mouseY);
 
   // Background box
   noStroke();
@@ -385,13 +405,31 @@ function drawInfoBox() {
 
   fill(255);
   textAlign(LEFT, TOP);
-  textSize(base * 0.02); 
-
+  
   let textX = x + pad;
-  let textY = y + pad;
+  let textY = y+ pad;
+
+  textSize(base * 0.025);
+  text("My Personality Planet: Family", textX, textY);
+
+  textSize(base * 0.02);
+  textY = textY + 30;
 
   for (let i = 0; i < infoLines.length; i++) {
     text(infoLines[i], textX, textY + i * lineH);
   }
   pop();
+}
+
+function redirect(){
+  window.location.href = "https://kimchampion.github.io/personality-planets/";
+}
+
+function stopAllObjectSounds() {
+  let all = [sndObj0, sndObj1, sndObj2, sndObj3, sndObj4, sndObj5, sndObj6];
+  for (let s of all) {
+    if (s && s.isPlaying()) {
+      s.stop();
+    }
+  }
 }
